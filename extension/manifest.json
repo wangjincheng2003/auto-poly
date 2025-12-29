@@ -5,11 +5,13 @@
   "description": "在 Polymarket 页面显示 auto-poly 交易配置",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "alarms"
   ],
   "host_permissions": [
     "https://polymarket.com/*",
-    "https://api.github.com/*"
+    "https://api.github.com/*",
+    "https://gamma-api.polymarket.com/*"
   ],
   "action": {
     "default_popup": "popup.html",

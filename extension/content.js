@@ -178,7 +178,10 @@ function createNoMatchPanel() {
     btn.textContent = 'Adding...';
     btn.disabled = true;
 
+    console.log('Auto-Poly: Extracting market info...');
     const marketInfo = extractMarketInfo();
+    console.log('Auto-Poly: Market info:', marketInfo);
+
     if (!marketInfo) {
       btn.textContent = 'Failed - No Data';
       setTimeout(() => {
@@ -189,10 +192,21 @@ function createNoMatchPanel() {
     }
 
     // 发送给 background 处理
+    console.log('Auto-Poly: Sending to background...');
     chrome.runtime.sendMessage({
       type: 'ADD_MARKET',
       market: marketInfo
     }, (response) => {
+      console.log('Auto-Poly: Response:', response, chrome.runtime.lastError);
+      if (chrome.runtime.lastError) {
+        btn.textContent = 'Error';
+        console.error('Auto-Poly:', chrome.runtime.lastError);
+        setTimeout(() => {
+          btn.textContent = '+ Add Market';
+          btn.disabled = false;
+        }, 2000);
+        return;
+      }
       if (response && response.success) {
         btn.textContent = 'Added!';
         btn.classList.add('auto-poly-add-success');
@@ -220,70 +234,14 @@ function createNoMatchPanel() {
 
 // 从页面提取市场信息
 function extractMarketInfo() {
-  try {
-    // 方法1: 从 __NEXT_DATA__ 提取
-    const nextDataEl = document.getElementById('__NEXT_DATA__');
-    if (nextDataEl) {
-      const data = JSON.parse(nextDataEl.textContent);
-      const pageProps = data?.props?.pageProps;
-
-      // 尝试不同的数据路径
-      let market = pageProps?.market || pageProps?.data?.market;
-      let event = pageProps?.event || pageProps?.data?.event;
-
-      if (market) {
-        return {
-          name: market.question || market.title || getPageTitle(),
-          market_id: market.conditionId || market.condition_id,
-          yes_token_id: market.clobTokenIds?.[0] || market.tokens?.[0]?.token_id,
-          no_token_id: market.clobTokenIds?.[1] || market.tokens?.[1]?.token_id,
-        };
-      }
-
-      // 如果是 event 页面，可能有多个 markets
-      if (event?.markets?.[0]) {
-        const m = event.markets[0];
-        return {
-          name: m.question || event.title || getPageTitle(),
-          market_id: m.conditionId || m.condition_id,
-          yes_token_id: m.clobTokenIds?.[0] || m.tokens?.[0]?.token_id,
-          no_token_id: m.clobTokenIds?.[1] || m.tokens?.[1]?.token_id,
-        };
-      }
-    }
-
-    // 方法2: 从页面 script 标签中查找
-    const scripts = document.querySelectorAll('script');
-    for (const script of scripts) {
-      const text = script.textContent || '';
-      const conditionMatch = text.match(/"conditionId"\s*:\s*"(0x[a-f0-9]+)"/i);
-      const tokenMatch = text.match(/"clobTokenIds"\s*:\s*\["(\d+)"\s*,\s*"(\d+)"\]/);
-
-      if (conditionMatch && tokenMatch) {
-        return {
-          name: getPageTitle(),
-          market_id: conditionMatch[1],
-          yes_token_id: tokenMatch[1],
-          no_token_id: tokenMatch[2],
-        };
-      }
-    }
-
-    // 方法3: 从 window 对象提取（如果有）
-    if (window.__MARKET_DATA__) {
-      return {
-        name: window.__MARKET_DATA__.question || getPageTitle(),
-        market_id: window.__MARKET_DATA__.conditionId,
-        yes_token_id: window.__MARKET_DATA__.clobTokenIds?.[0],
-        no_token_id: window.__MARKET_DATA__.clobTokenIds?.[1],
-      };
-    }
-
-    return null;
-  } catch (e) {
-    console.error('Auto-Poly: Failed to extract market info', e);
+  // 从 URL 提取 slug
+  const slug = getSlugFromUrl();
+  if (!slug) {
+    console.log('Auto-Poly: No slug found in URL');
     return null;
   }
+
+  return { slug };
 }
 
 // 让面板可拖拽
