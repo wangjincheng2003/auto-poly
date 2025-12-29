@@ -113,7 +113,7 @@ def get_portfolio_summary(client):
         positions = session.get("https://data-api.polymarket.com/positions",
                                params={'user': PROXY_ADDRESS}, timeout=10).json()
         usdc_balance = float(client.get_balance_allowance(
-            BalanceAllowanceParams(asset_type=AssetType.COLLATERAL))['balance']) / 1e6
+            BalanceAllowanceParams(asset_type=AssetType.COLLATERAL))['balance']) / 1e6 # type: ignore
 
         # 过滤有效持仓并格式化
         valid_positions = [(float(p['size']), float(p['currentValue']),
