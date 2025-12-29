@@ -1,7 +1,7 @@
 {
   "markets": [
     {
-      "enabled": false,
+      "enabled": true,
       "name": "China coup attempt in 2025?",
       "market_id": "0xf59780b2d983f7323e570a953b9e42bbe38f7cce41a38b76354680a83acf7e57",
       "yes_token_id": "10781914913628463441987657025676201150234065898493590890427500076179835819509",
@@ -55,7 +55,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will Jia Yueting enter mainland China by December 31?",
       "market_id": "0x56e5fcf04deb45f9d405eb9f5202fd3247e192c5ece93b8571de78cb44617a8e",
       "yes_token_id": "69491057239561654524877574699536645015337570300926457702979750917310294441319",
@@ -73,7 +73,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will China unban Bitcoin in 2025?",
       "market_id": "0xfc4453f83b30fdad8ac707b7bd11309aa4c4c90d0c17ad0c4680d4142d4471f7",
       "yes_token_id": "113725578228350368514309301524942744434163841203212062342988045199278956063756",
@@ -82,7 +82,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "China x India military clash by December 31?",
       "market_id": "0x689a77ca28cf59efae262fd37d07aa787194d52b13bbe009a223de15bf5c62af",
       "yes_token_id": "62499647704758013801224496519154801919449219197687180369505612744147504118777",
@@ -109,7 +109,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Interstellar object confirmed aliens?",
       "market_id": "0xc1c4e7857dfd1fe47c1e6a11813aaca3f622a5f47769cd765be8c7a8336af555",
       "yes_token_id": "61760528616479661808037564191552690192373467478798081794724062354745005823748",
@@ -136,7 +136,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "US x Russia military clash by June 30, 2026?",
       "market_id": "0xb1311aeea3677808af7f317895208bf9d3f685ab3f946f67afca11d5ed199dd0",
       "yes_token_id": "53718143507722222025482708105484979770434331532873527434664602715154372949986",
@@ -145,7 +145,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will China unban Bitcoin by 2027?",
       "market_id": "0x4bd2d6744cfb40bd33520963069947643140e9facccec0b44d1e61944aa96997",
       "yes_token_id": "91810646921497227084241579668235102205462718984593674693010693975258849328842",
@@ -154,7 +154,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Sam Altman in jail by December 31?",
       "market_id": "0x8353c098064e80451077632f4d5cbb09b4888e1a50345eadc530f72930ba59fd",
       "yes_token_id": "79675810086712347714406299237700677292245501714300909228245391355370843231120",
@@ -163,7 +163,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Sam Altman in jail by June 30?",
       "market_id": "0x5462f8d31cc41314da1b56ff424068657315c66c0404b8cb5dff466939ca6625",
       "yes_token_id": "51236945722865266370106564747596093732197995012408200951510863377812916453902",
@@ -172,7 +172,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "China x Japan military clash before 2027?",
       "market_id": "0xa466e17524bcc473279c4ca86f4f1fb01932946a8204e68f6ca96628f8bf2b5e",
       "yes_token_id": "24359841971256354562338291910316825498086150942929460621080163666720754945761",
@@ -181,7 +181,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "China x Japan sever diplomatic relations in 2025?",
       "market_id": "0x32f62a8e8985c13404feee8ae4033ac026d9378957e3ae0102adadcd1634026d",
       "yes_token_id": "109968756215969766578978144932496168767072452761271956763448057393190541454059",
@@ -190,7 +190,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will Japanese PM apologize for China comments in 2025?",
       "market_id": "0x6b8984b1de69cf1eb54707de4cfd0455b3eed053c3db1e565b2f906d4fbf8247",
       "yes_token_id": "58969364816213855615291775146907533569112761571567201275002876280034021179495",
@@ -199,7 +199,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "China x Philippines military clash before 2027?",
       "market_id": "0x7e045734da5d2a0743da450cc5cff8e2c1e1298a9731f7fbadd7c13823c5c79c",
       "yes_token_id": "44447031562738174918016769793991804433486269578769473189935766976836636647978",
@@ -208,7 +208,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will Donald Trump visit Taiwan in 2026?",
       "market_id": "0x4eea504d6a9a609f2e6fe6b88de6327755282192ebbae4b3b170eac91b611214",
       "yes_token_id": "109935119827597597754008718880016120913965810481393706247560065379293680289585",
@@ -217,7 +217,7 @@
       "max_position_value": 40
     },
     {
-      "enabled": false,
+      "enabled": true,
       "name": "Will Xi Jinping be the next leader out before 2027?",
       "market_id": "0x7e5823e4abb9cba12a2662e5d0124797c475be033108534fdfa992d900921ef6",
       "yes_token_id": "86949061933879231176291154263332814214486241925170111302001673639594699687452",

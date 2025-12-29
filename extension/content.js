@@ -3,14 +3,41 @@
 let marketsConfig = null;
 let currentPanel = null;
 
+// 等待页面数据加载完成
+async function waitForPageData(maxWait = 5000) {
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < maxWait) {
+    // 检查 __NEXT_DATA__ 是否包含市场数据
+    const nextDataEl = document.getElementById('__NEXT_DATA__');
+    if (nextDataEl) {
+      try {
+        const data = JSON.parse(nextDataEl.textContent);
+        const pageProps = data?.props?.pageProps;
+        if (pageProps?.market || pageProps?.event || pageProps?.data?.market || pageProps?.data?.event) {
+          return true;
+        }
+      } catch (e) {}
+    }
+
+    // 等待 200ms 后重试
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+
+  return false;
+}
+
 // 初始化
 async function init() {
-  // 从 storage 读取配置并显示
+  // 从 storage 读取配置
   const result = await chrome.storage.local.get(['marketsConfig']);
   if (result.marketsConfig) {
     marketsConfig = result.marketsConfig;
-    checkAndShowPanel();
   }
+
+  // 等待页面数据加载完成后再显示面板
+  await waitForPageData();
+  checkAndShowPanel();
 
   // 尝试后台刷新（不阻塞显示）
   try {
@@ -327,11 +354,13 @@ function checkAndShowPanel() {
 
 // 监听 URL 变化 (SPA 应用)
 let lastUrl = location.href;
-new MutationObserver(() => {
+new MutationObserver(async () => {
   const url = location.href;
   if (url !== lastUrl) {
     lastUrl = url;
-    setTimeout(checkAndShowPanel, 500); // 等待页面内容加载
+    // 等待页面数据加载完成
+    await waitForPageData();
+    checkAndShowPanel();
   }
 }).observe(document, { subtree: true, childList: true });
 

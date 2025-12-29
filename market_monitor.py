@@ -140,49 +140,6 @@ def save_history(history: Dict):
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
-def update_markets_config(history: Dict, top_n: int = 10) -> set:
-    """根据7天平均收益率更新配置，只启用前top_n名的市场，返回启用的market_id集合"""
-    with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-        config = json.load(f)
-
-    markets = config['markets']
-
-    # 计算每个市场的7天平均收益率
-    market_yields = []
-    for market in markets:
-        market_id = market['market_id']
-        avg_yield = calculate_avg_yield(market_id, history, days=7)
-        market_yields.append((market_id, avg_yield if avg_yield is not None else 0))
-
-    # 按收益率排序，取前top_n
-    market_yields.sort(key=lambda x: x[1], reverse=True)
-    top_market_ids = set(m[0] for m in market_yields[:top_n])
-
-    # 更新enabled状态
-    changed = []
-    for market in markets:
-        market_id = market['market_id']
-        should_enable = market_id in top_market_ids
-        if market['enabled'] != should_enable:
-            changed.append((market['name'], market['enabled'], should_enable))
-        market['enabled'] = should_enable
-
-    # 保存配置
-    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
-        json.dump(config, f, ensure_ascii=False, indent=2)
-
-    # 输出变更
-    if changed:
-        console.print(f"[yellow]配置更新 (前{top_n}名启用):[/yellow]")
-        for name, old, new in changed:
-            status = "[green]启用[/green]" if new else "[red]禁用[/red]"
-            console.print(f"  {name}: {status}")
-    else:
-        console.print(f"[dim]配置无变化 (前{top_n}名启用)[/dim]")
-
-    return top_market_ids
-
-
 def backup_old_data(history: Dict, days: int = 7) -> Dict:
     cutoff_time = datetime.now() - timedelta(days=days)
     cutoff_str = cutoff_time.isoformat()
@@ -330,11 +287,15 @@ def extract_market_stats(market_data: Dict, market_config: Dict, client: Optiona
     inside_buy_value = buy_cum_value if bid_levels else 0
     inside_sell_value = sell_cum_value if ask_levels else 0
 
+    volume_24h = market_data.get('volume24hr', 0)
     volume_1w = market_data.get('volume1wk', 0)
+    volume_6d = max(0, volume_1w - volume_24h)  # 前6天的量
+    daily_avg_6d = volume_6d / 6  # 前6天日均量
+    weighted_daily = daily_avg_6d * 0.7 + volume_24h * 0.3  # 加权日均量
     spread = target_sell_price - target_buy_price if target_sell_price > target_buy_price else 0
 
     base_value = inside_sell_value if inside_sell_value > 0 else orderbook_depth.get('best_ask_value', 0)
-    turnover_ratio = volume_1w / (base_value + target_value) if base_value > 0 else 0
+    turnover_ratio = weighted_daily / (base_value + target_value) * target_sell_price if base_value > 0 else 0
     yield_rate = spread * turnover_ratio
 
     return {
@@ -343,7 +304,7 @@ def extract_market_stats(market_data: Dict, market_config: Dict, client: Optiona
         'enabled': market_config.get('enabled', False),
         'trade_side': market_config.get('trade_side', 'N/A'),
         'max_position_value': market_config.get('max_position_value', 25.0),
-        'volume_24h': market_data.get('volume24hr', 0),
+        'volume_24h': volume_24h,
         'volume_1w': volume_1w,
         'liquidity': market_data.get('liquidityNum', 0),
         'best_bid': best_bid,
@@ -357,49 +318,6 @@ def extract_market_stats(market_data: Dict, market_config: Dict, client: Optiona
         'closed': market_data.get('closed', True),
         'error': False
     }
-
-
-def sample_market(market_config: Dict, client: Optional[ClobClient] = None) -> Optional[Dict]:
-    """采样单个市场的收益率"""
-    try:
-        market_id = market_config['market_id']
-        market_data = get_market_data(market_id)
-        if not market_data:
-            return None
-
-        trade_side = market_config.get('trade_side', 'no')
-        token_id = market_config.get('yes_token_id') if trade_side == 'yes' else market_config.get('no_token_id')
-        if not token_id:
-            return None
-
-        orderbook_depth = get_orderbook_depth(token_id, client, market_id)
-        target_value = float(market_config.get('max_position_value', 25))
-
-        bid_levels = orderbook_depth.get('bid_levels', [])
-        ask_levels = orderbook_depth.get('ask_levels', [])
-
-        target_buy_price = find_price_by_value(bid_levels, target_value, is_bid=True)
-        target_sell_price = find_price_by_value(ask_levels, target_value, is_bid=False)
-
-        spread = target_sell_price - target_buy_price if target_sell_price > target_buy_price else 0
-
-        sell_cum_value = cumulative_value_to_price(ask_levels, target_sell_price, is_bid=False)
-        volume_1w = market_data.get('volume1wk', 0)
-        base_value = sell_cum_value if sell_cum_value > 0 else orderbook_depth.get('best_ask_value', 0)
-        turnover_ratio = volume_1w / (base_value + target_value) if base_value > 0 else 0
-
-        yield_rate = spread * turnover_ratio
-
-        return {
-            'ts': datetime.now().isoformat(),
-            'yield_rate': yield_rate,
-            'spread': spread,
-            'turnover': turnover_ratio,
-            'volume_1w': volume_1w
-        }
-
-    except:
-        return None
 
 
 # ============= HTML 生成 =============
@@ -490,7 +408,11 @@ def save_to_html(markets_stats: List[Dict], history: Dict = None):
         .trade-side {{ display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }}
         .trade-side.yes {{ background: #d4edda; color: #155724; }}
         .trade-side.no {{ background: #f8d7da; color: #721c24; }}
-        .footer {{ padding: 20px; text-align: center; color: #6c757d; background: #f8f9fa; }}
+        .footer {{ padding: 30px; color: #6c757d; background: #f8f9fa; }}
+        .footer .source {{ text-align: center; margin-bottom: 20px; }}
+        .formula {{ background: white; padding: 20px; border-radius: 8px; margin-top: 15px; font-size: 13px; text-align: left; }}
+        .formula h4 {{ margin: 0 0 10px 0; color: #495057; }}
+        .formula code {{ background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: monospace; }}
     </style>
 </head>
 <body>
@@ -565,7 +487,15 @@ def save_to_html(markets_stats: List[Dict], history: Dict = None):
 """
 
     html += """</tbody></table></div>
-        <div class="footer"><p>数据来源: Polymarket API</p></div>
+        <div class="footer">
+            <p class="source">数据来源: Polymarket API</p>
+            <div class="formula">
+                <h4>公式说明</h4>
+                <p><strong>加权日均量</strong> = <code>前6天日均量 × 0.7 + 24小时量 × 0.3</code></p>
+                <p><strong>周转</strong> = <code>加权日均量 / (卖单流动性 + 目标持仓) × 卖价</code></p>
+                <p><strong>收益率</strong> = <code>价差 × 周转</code></p>
+            </div>
+        </div>
     </div>
 </body>
 </html>"""
@@ -584,13 +514,12 @@ def run_cycle(client: Optional[ClobClient] = None):
 
     markets_config = load_markets_config()
     history = load_history()
-
-    console.print(f"[dim]市场: {len(markets_config)} | 历史记录: {len(history)}[/dim]")
-
-    # 采样 + 获取数据
-    markets_stats = []
-    success_count = 0
     total_markets = len(markets_config)
+
+    console.print(f"[dim]市场: {total_markets} | 历史记录: {len(history)}[/dim]")
+
+    # 获取市场数据
+    markets_stats = []
 
     with Progress(
         SpinnerColumn(),
@@ -599,52 +528,35 @@ def run_cycle(client: Optional[ClobClient] = None):
         TaskProgressColumn(),
         console=console,
     ) as progress:
-        # 采样任务
-        sample_task = progress.add_task("[cyan]采样收益率...", total=total_markets)
+        task = progress.add_task("[cyan]获取市场数据...", total=total_markets)
 
         with ThreadPoolExecutor(max_workers=10) as executor:
-            sample_futures = {executor.submit(sample_market, c, client): c for c in markets_config}
-            for future in as_completed(sample_futures):
-                config = sample_futures[future]
+            futures = {executor.submit(get_market_data, c['market_id']): c for c in markets_config}
+            for future in as_completed(futures):
+                config = futures[future]
                 market_id = config['market_id']
-                try:
-                    sample = future.result()
-                    if sample:
-                        if market_id not in history:
-                            history[market_id] = []
-                        history[market_id].append(sample)
-                        success_count += 1
-                except:
-                    pass
-                progress.update(sample_task, advance=1)
-
-        # 获取市场数据任务
-        stats_task = progress.add_task("[cyan]获取市场数据...", total=total_markets)
-
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            stats_futures = {executor.submit(get_market_data, c['market_id']): c for c in markets_config}
-            for future in as_completed(stats_futures):
-                config = stats_futures[future]
                 try:
                     market_data = future.result()
                     if market_data:
-                        markets_stats.append(extract_market_stats(market_data, config, client))
+                        stat = extract_market_stats(market_data, config, client)
+                        markets_stats.append(stat)
+                        # 保存收益率到历史
+                        if not stat.get('error'):
+                            if market_id not in history:
+                                history[market_id] = []
+                            history[market_id].append({
+                                'ts': datetime.now().isoformat(),
+                                'yield_rate': round(stat.get('yield_rate', 0), 4)
+                            })
                 except:
                     pass
-                progress.update(stats_task, advance=1)
+                progress.update(task, advance=1)
 
-    console.print(f"[green]✓ 采样完成: {success_count}/{total_markets}[/green]")
+    console.print(f"[green]✓ 完成: {len(markets_stats)}/{total_markets}[/green]")
 
     # 备份和保存
     history = backup_old_data(history, days=7)
     save_history(history)
-
-    # 更新配置，只启用前10名
-    enabled_market_ids = update_markets_config(history, top_n=10)
-
-    # 更新 markets_stats 中的 enabled 状态
-    for stat in markets_stats:
-        stat['enabled'] = stat.get('market_id') in enabled_market_ids
 
     # 生成HTML
     save_to_html(markets_stats, history)
