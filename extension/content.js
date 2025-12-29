@@ -44,38 +44,59 @@ function getPageTitle() {
   return titleEl ? titleEl.textContent.trim() : document.title;
 }
 
-// 模糊匹配市场名称
-function findMatchingMarket() {
-  if (!marketsConfig || !marketsConfig.markets) return null;
+// 从页面获取 market_id
+function getMarketIdFromPage() {
+  try {
+    // 方法1: 从 __NEXT_DATA__ 提取
+    const nextDataEl = document.getElementById('__NEXT_DATA__');
+    if (nextDataEl) {
+      const data = JSON.parse(nextDataEl.textContent);
+      const pageProps = data?.props?.pageProps;
 
-  const slug = getSlugFromUrl();
-  const pageTitle = getPageTitle().toLowerCase();
+      // 尝试不同的数据路径
+      let market = pageProps?.market || pageProps?.data?.market;
+      let event = pageProps?.event || pageProps?.data?.event;
 
-  for (const market of marketsConfig.markets) {
-    const marketName = market.name.toLowerCase();
+      if (market?.conditionId) {
+        return market.conditionId;
+      }
 
-    // 方法1: slug 包含市场名称的关键词
-    if (slug) {
-      const slugWords = slug.replace(/-/g, ' ').toLowerCase();
-      // 计算匹配度
-      const marketWords = marketName.split(/\s+/);
-      const matchedWords = marketWords.filter(word =>
-        word.length > 3 && slugWords.includes(word)
-      );
-      if (matchedWords.length >= 2) {
-        return market;
+      if (event?.markets?.[0]?.conditionId) {
+        return event.markets[0].conditionId;
       }
     }
 
-    // 方法2: 页面标题包含市场名称
-    if (pageTitle.includes(marketName) || marketName.includes(pageTitle)) {
-      return market;
+    // 方法2: 从页面 script 标签中查找
+    const scripts = document.querySelectorAll('script');
+    for (const script of scripts) {
+      const text = script.textContent || '';
+      const match = text.match(/"conditionId"\s*:\s*"(0x[a-f0-9]+)"/i);
+      if (match) {
+        return match[1];
+      }
     }
 
-    // 方法3: 关键词匹配
-    const keywords = marketName.split(/\s+/).filter(w => w.length > 3);
-    const matchCount = keywords.filter(kw => pageTitle.includes(kw)).length;
-    if (matchCount >= 3) {
+    return null;
+  } catch (e) {
+    console.error('Auto-Poly: Failed to get market_id', e);
+    return null;
+  }
+}
+
+// 精确匹配市场（使用 market_id）
+function findMatchingMarket() {
+  if (!marketsConfig || !marketsConfig.markets) return null;
+
+  const pageMarketId = getMarketIdFromPage();
+  console.log('Auto-Poly: Page market_id:', pageMarketId);
+
+  if (!pageMarketId) {
+    return null;
+  }
+
+  // 精确匹配 market_id
+  for (const market of marketsConfig.markets) {
+    if (market.market_id === pageMarketId) {
       return market;
     }
   }
