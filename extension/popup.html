@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      width: 350px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      color: #1a1a2e;
+      margin: 0;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo {
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    }
+    .hint {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #4f46e5;
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+    .status {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+    }
+    .status.success {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status.loading {
+      display: block;
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .divider {
+      border-top: 1px solid #e5e7eb;
+      margin: 16px 0;
+    }
+    .info {
+      font-size: 12px;
+      color: #666;
+    }
+    .info strong {
+      color: #333;
+    }
+    .config-preview {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .config-preview .market {
+      padding: 6px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .config-preview .market:last-child {
+      border-bottom: none;
+    }
+    .config-preview .market-name {
+      font-weight: 500;
+      color: #1f2937;
+    }
+    .config-preview .market-info {
+      color: #6b7280;
+      font-size: 11px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .badge-enabled {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .badge-disabled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <h1><span class="logo">📊</span> Auto-Poly Config</h1>
+
+  <div class="form-group">
+    <label>GitHub Token</label>
+    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx">
+    <div class="hint">需要 repo 权限的 Personal Access Token</div>
+  </div>
+
+  <div class="form-group">
+    <label>仓库信息</label>
+    <input type="text" id="repo" placeholder="owner/repo" value="wangjincheng2003/auto-poly">
+  </div>
+
+  <div class="form-group">
+    <label>配置文件路径</label>
+    <input type="text" id="path" placeholder="markets_config.json" value="markets_config.json">
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-primary" id="save">保存配置</button>
+    <button class="btn-secondary" id="refresh">刷新数据</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="divider"></div>
+
+  <div class="info">
+    <strong>已加载市场:</strong> <span id="market-count">0</span> 个
+  </div>
+
+  <div class="config-preview" id="preview"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

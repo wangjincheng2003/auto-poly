@@ -1,0 +1,247 @@
+/* Auto-Poly Panel - Modern & Minimal */
+
+.auto-poly-panel {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text: #1a1a1a;
+  --text-secondary: #6b7280;
+  --border: rgba(0, 0, 0, 0.06);
+  --accent: #6366f1;
+  --success: #10b981;
+  --danger: #ef4444;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 200px;
+  background: var(--bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .auto-poly-panel {
+    --bg: rgba(30, 30, 32, 0.95);
+    --bg-secondary: rgba(255, 255, 255, 0.05);
+    --text: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.auto-poly-panel.auto-poly-hidden {
+  opacity: 0;
+  transform: translateX(20px) scale(0.95);
+  pointer-events: none;
+}
+
+/* Header */
+.auto-poly-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: grab;
+  user-select: none;
+}
+
+.auto-poly-logo {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--accent), #a855f7);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  margin-right: 10px;
+  letter-spacing: -0.5px;
+}
+
+.auto-poly-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
+  letter-spacing: -0.2px;
+}
+
+.auto-poly-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.auto-poly-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text);
+}
+
+/* Content */
+.auto-poly-content {
+  padding: 14px;
+}
+
+.auto-poly-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.auto-poly-row + .auto-poly-row {
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 12px;
+}
+
+.auto-poly-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.auto-poly-value {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* Status badges */
+.auto-poly-status-enabled {
+  color: var(--success);
+}
+
+.auto-poly-status-disabled {
+  color: var(--danger);
+}
+
+.auto-poly-side-yes {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.auto-poly-side-no {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Footer */
+.auto-poly-footer {
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-top: 1px solid var(--border);
+}
+
+.auto-poly-footer:hover {
+  color: var(--text);
+}
+
+/* No match state */
+.auto-poly-no-match {
+  opacity: 0.9;
+}
+
+.auto-poly-no-config {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 4px 0 12px 0;
+}
+
+/* Add button */
+.auto-poly-add-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--accent), #a855f7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auto-poly-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.auto-poly-add-btn:active {
+  transform: translateY(0);
+}
+
+.auto-poly-add-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auto-poly-add-btn.auto-poly-add-success {
+  background: var(--success);
+}
+
+/* Animation */
+@keyframes auto-poly-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.auto-poly-panel {
+  animation: auto-poly-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effect */
+.auto-poly-panel:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  .auto-poly-panel:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+}
