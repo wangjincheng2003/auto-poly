@@ -145,7 +145,7 @@
       "max_position_value": 30.0
     },
     {
-      "enabled": true,
+      "enabled": false,
       "name": "Will Xi Jinping win the Nobel Peace Prize in 2026?",
       "market_id": "0x7f347ed733252dc7afbd91e28104e23651b81ef6d2ef6805c7915c22e89a69b5",
       "yes_token_id": "43017540324415003826064618020596028072344969424808059974990020921868559630137",
