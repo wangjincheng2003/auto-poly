@@ -7,7 +7,6 @@ Polymarket市场数据统计脚本
 
 import json
 import os
-import csv
 import requests
 import webbrowser
 from datetime import datetime
@@ -15,7 +14,6 @@ from typing import Dict, List, Optional
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 from rich.console import Console
-from rich.table import Table
 from rich.progress import Progress
 from py_clob_client.client import ClobClient
 from py_clob_client.clob_types import OpenOrderParams
@@ -248,16 +246,6 @@ def format_volume(volume: float) -> str:
         return f"${volume:.0f}"
 
 
-def format_price_change(change: float) -> str:
-    """格式化价格变化显示"""
-    if change is None or change == 0:
-        return "-"
-
-    color = "green" if change > 0 else "red"
-    sign = "+" if change > 0 else ""
-    return f"[{color}]{sign}{change*100:.1f}%[/{color}]"
-
-
 def extract_market_stats(market_data: Dict, market_config: Dict,
                         client: Optional[ClobClient] = None) -> Dict:
     """
@@ -319,7 +307,6 @@ def extract_market_stats(market_data: Dict, market_config: Dict,
     spread = target_sell_price - target_buy_price if target_sell_price > target_buy_price else 0
 
     # 周转率基于卖侧内侧金额做近似
-    volume_24h = market_data.get('volume24hr', 0)
     base_value = inside_sell_value if inside_sell_value > 0 else orderbook_depth.get('best_ask_value', 0)
     turnover_ratio = (volume_1w) / (base_value + target_value) if base_value > 0 else 0
 
@@ -330,6 +317,7 @@ def extract_market_stats(market_data: Dict, market_config: Dict,
         'name': market_config.get('name', market_data.get('question', 'Unknown')),
         'enabled': market_config.get('enabled', False),
         'trade_side': market_config.get('trade_side', 'N/A'),
+        'max_position_value': market_config.get('max_position_value', 25.0),
         'volume_24h': market_data.get('volume24hr', 0),
         'volume_1w': volume_1w,
         'volume_total': market_data.get('volumeNum', 0),
@@ -353,203 +341,6 @@ def extract_market_stats(market_data: Dict, market_config: Dict,
         'end_date': market_data.get('endDateIso', 'N/A'),
         'error': False
     }
-
-
-def display_summary_table(markets_stats: List[Dict]):
-    """显示市场概览表格"""
-    table = Table(title="🎯 Polymarket 市场数据概览", show_header=True, header_style="bold magenta",
-                  box=None, padding=(0, 1))
-
-    table.add_column("状态", style="dim", width=4, no_wrap=True)
-    table.add_column("市场名称", style="cyan", width=35, no_wrap=False)
-    table.add_column("方向", justify="center", width=5, no_wrap=True)
-    table.add_column("24h量", justify="right", style="yellow", width=8)
-    table.add_column("7d量", justify="right", style="yellow", width=8)
-    table.add_column("流动性", justify="right", width=8)
-    table.add_column("买价金额", justify="right", width=8)
-    table.add_column("卖价金额", justify="right", width=8)
-    table.add_column("价差", justify="right", width=6)
-    table.add_column("周转率", justify="right", width=8)
-    table.add_column("收益率", justify="right", width=8)
-
-    # 按收益率排序（从大到小）
-    sorted_stats = sorted(markets_stats, key=lambda x: x.get('yield_rate', 0), reverse=True)
-
-    for stat in sorted_stats:
-        if stat.get('error'):
-            continue
-
-        status = "✅" if stat.get('enabled') else "⏸️"
-        name = stat['name'][:37] + "..." if len(stat['name']) > 40 else stat['name']
-        side = stat['trade_side'].upper()[:3]
-
-        # 市场状态指示
-        if stat.get('closed'):
-            status = "🔒"
-        elif not stat.get('active'):
-            status = "⚠️"
-
-        # 格式化价差
-        spread = stat.get('spread', 0)
-        spread_str = f"{spread:.3f}" if spread > 0 else "-"
-
-        # 格式化周转率
-        turnover = stat.get('turnover_ratio', 0)
-        if turnover >= 1:
-            turnover_str = f"{turnover:.1f}x"
-        elif turnover > 0:
-            turnover_str = f"{turnover:.2f}x"
-        else:
-            turnover_str = "-"
-
-        # 格式化收益率
-        yield_rate = stat.get('yield_rate', 0)
-        if yield_rate >= 1:
-            yield_str = f"{yield_rate:.1f}"
-        elif yield_rate > 0:
-            yield_str = f"{yield_rate:.2f}"
-        else:
-            yield_str = "-"
-
-        table.add_row(
-            status,
-            name,
-            side,
-            format_volume(stat['volume_24h']),
-            format_volume(stat['volume_1w']),
-            format_volume(stat['liquidity']),
-            format_volume(stat.get('best_bid_value', 0)),
-            format_volume(stat.get('best_ask_value', 0)),
-            spread_str,
-            turnover_str,
-            yield_str
-        )
-
-    console.print(table)
-
-
-def display_detailed_stats(markets_stats: List[Dict]):
-    """显示详细市场统计"""
-    # 只显示启用的市场
-    enabled_markets = [m for m in markets_stats if m.get('enabled') and not m.get('error')]
-
-    if not enabled_markets:
-        console.print("[yellow]没有启用的市场[/yellow]")
-        return
-
-    console.print("\n📊 启用市场详细数据\n", style="bold blue")
-
-    for stat in enabled_markets:
-        console.print(f"[bold cyan]{stat['name']}[/bold cyan] [{stat['trade_side'].upper()}]")
-        console.print(f"  💰 交易量: 24h={format_volume(stat['volume_24h'])} | "
-                     f"7d={format_volume(stat['volume_1w'])} | "
-                     f"总计={format_volume(stat['volume_total'])}")
-        console.print(f"  📈 价格: 最新={stat['last_price']:.3f} | "
-                     f"买盘={stat['best_bid']:.3f} | "
-                     f"卖盘={stat['best_ask']:.3f}")
-        console.print(f"  📊 变化: 24h={format_price_change(stat['price_change_24h'])} | "
-                     f"7d={format_price_change(stat['price_change_1w'])}")
-        console.print(f"  💧 流动性: {format_volume(stat['liquidity'])}")
-        console.print(f"  ⏰ 结束时间: {stat['end_date']}")
-        console.print()
-
-
-def display_statistics_summary(markets_stats: List[Dict]):
-    """显示总体统计摘要"""
-    enabled_markets = [m for m in markets_stats if m.get('enabled') and not m.get('error')]
-    all_markets = [m for m in markets_stats if not m.get('error')]
-
-    total_volume_24h = sum(m.get('volume_24h', 0) for m in enabled_markets)
-    total_volume_total = sum(m.get('volume_total', 0) for m in all_markets)
-    total_liquidity = sum(m.get('liquidity', 0) for m in enabled_markets)
-
-    table = Table(title="📈 总体统计", show_header=True, header_style="bold green")
-    table.add_column("指标", style="cyan")
-    table.add_column("数值", justify="right", style="yellow")
-
-    table.add_row("监控市场总数", str(len(all_markets)))
-    table.add_row("启用市场数量", str(len(enabled_markets)))
-    table.add_row("启用市场24h总交易量", format_volume(total_volume_24h))
-    table.add_row("所有市场累计交易量", format_volume(total_volume_total))
-    table.add_row("启用市场总流动性", format_volume(total_liquidity))
-
-    console.print("\n")
-    console.print(table)
-
-
-def save_to_csv(markets_stats: List[Dict], filename: Optional[str] = None):
-    """
-    将市场数据保存为CSV文件
-
-    Args:
-        markets_stats: 市场统计数据列表
-        filename: 输出文件名（可选，默认使用时间戳）
-    """
-    if filename is None:
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"polymarket_markets_{timestamp}.csv"
-
-    # 过滤掉错误的数据
-    valid_stats = [s for s in markets_stats if not s.get('error')]
-
-    if not valid_stats:
-        console.print("[yellow]没有有效数据可保存[/yellow]")
-        return
-
-    # 按收益率排序（从大到小）
-    sorted_stats = sorted(valid_stats, key=lambda x: x.get('yield_rate', 0), reverse=True)
-
-    # 定义CSV列
-    fieldnames = [
-        '状态', '市场名称', '交易方向',
-        '24h交易量', '7d交易量', '总交易量',
-        '流动性',
-        '最佳买价(%)', '最佳卖价(%)',
-        '最佳买价金额', '最佳卖价金额',
-        '价差(%)', '周转率', '收益率'
-    ]
-
-    try:
-        with open(filename, 'w', newline='', encoding='utf-8-sig') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-
-            for stat in sorted_stats:
-                # 确定状态图标
-                if stat.get('closed'):
-                    status = '已关闭'
-                elif not stat.get('active'):
-                    status = '未激活'
-                elif stat.get('enabled'):
-                    status = '已启用'
-                else:
-                    status = '已暂停'
-
-                row = {
-                    '状态': status,
-                    '市场名称': stat['name'],
-                    '交易方向': stat['trade_side'].upper(),
-                    '24h交易量': f"{stat['volume_24h']:.2f}",
-                    '7d交易量': f"{stat['volume_1w']:.2f}",
-                    '总交易量': f"{stat['volume_total']:.2f}",
-                    '流动性': f"{stat['liquidity']:.2f}",
-                    '最佳买价(%)': f"{stat['best_bid']*100:.1f}" if stat['best_bid'] else '',
-                    '最佳卖价(%)': f"{stat['best_ask']*100:.1f}" if stat['best_ask'] else '',
-                    '最佳买价金额': f"{stat.get('best_bid_value', 0):.2f}",
-                    '最佳卖价金额': f"{stat.get('best_ask_value', 0):.2f}",
-                    '价差(%)': f"{stat.get('spread', 0)*100:.1f}" if stat.get('spread', 0) > 0 else '',
-                    '周转率': f"{stat.get('turnover_ratio', 0):.4f}" if stat.get('turnover_ratio', 0) > 0 else '',
-                    '收益率': f"{stat.get('yield_rate', 0):.4f}" if stat.get('yield_rate', 0) > 0 else ''
-                }
-                writer.writerow(row)
-
-        console.print(f"\n[green]✅ 数据已保存到: {filename}[/green]")
-        console.print(f"[dim]共保存 {len(sorted_stats)} 个市场的数据[/dim]")
-        return filename
-
-    except Exception as e:
-        console.print(f"[red]❌ 保存CSV文件失败: {str(e)}[/red]")
-        return None
 
 
 def save_to_html(markets_stats: List[Dict], filename: str = "polymarket_markets.html"):
@@ -724,6 +515,46 @@ def save_to_html(markets_stats: List[Dict], filename: str = "polymarket_markets.
             background: #f8d7da;
             color: #721c24;
         }}
+        .formula-section {{
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }}
+        .formula-section h3 {{
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 15px;
+        }}
+        .formula-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }}
+        .formula-card {{
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
+        .formula-card h4 {{
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 8px;
+        }}
+        .formula-card code {{
+            display: block;
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #495057;
+            margin-bottom: 8px;
+        }}
+        .formula-card p {{
+            font-size: 12px;
+            color: #6c757d;
+            margin: 0;
+        }}
         .footer {{
             padding: 20px;
             text-align: center;
@@ -769,6 +600,7 @@ def save_to_html(markets_stats: List[Dict], filename: str = "polymarket_markets.
                         <th>状态</th>
                         <th>市场名称</th>
                         <th>方向</th>
+                        <th class="right">上限</th>
                         <th class="right">24h交易量</th>
                         <th class="right">7d交易量</th>
                         <th class="right">流动性</th>
@@ -831,6 +663,7 @@ def save_to_html(markets_stats: List[Dict], filename: str = "polymarket_markets.
                         <td><span class="status {status_class}">{status_text}</span></td>
                         <td>{stat['name']}</td>
                         <td><span class="trade-side {side_class}">{trade_side}</span></td>
+                        <td class="right">${stat.get('max_position_value', 25):.0f}</td>
                         <td class="right">{format_volume(stat['volume_24h'])}</td>
                         <td class="right">{format_volume(stat['volume_1w'])}</td>
                         <td class="right">{format_volume(stat['liquidity'])}</td>
@@ -847,6 +680,22 @@ def save_to_html(markets_stats: List[Dict], filename: str = "polymarket_markets.
     html_content += """
                 </tbody>
             </table>
+        </div>
+
+        <div class="formula-section">
+            <h3>指标计算说明</h3>
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <h4>周转率</h4>
+                    <code>周转率 = 7日交易量 / (卖价金额 + 仓位上限)</code>
+                    <p>衡量市场活跃度，数值越高表示交易越频繁</p>
+                </div>
+                <div class="formula-card">
+                    <h4>收益率</h4>
+                    <code>收益率 = 价差 × 周转率</code>
+                    <p>综合考虑价差和交易频率的预期收益指标</p>
+                </div>
+            </div>
         </div>
 
         <div class="footer">
@@ -953,19 +802,8 @@ def main():
                 finally:
                     progress.update(task, advance=1)
 
-    # 显示表格
-    display_summary_table(markets_stats)
-
-    # 显示详细统计
-    display_detailed_stats(markets_stats)
-
-    # 显示总体统计
-    display_statistics_summary(markets_stats)
-
     # 保存为HTML文件并自动打开
     save_to_html(markets_stats)
-
-    console.print("\n[green]✅ 数据获取完成![/green]\n")
 
 
 if __name__ == "__main__":

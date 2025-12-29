@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polymarket 市场数据 - 2025-11-25 09:50:59</title>
+    <title>Polymarket 市场数据 - 2025-12-29 12:13:29</title>
     <style>
         * {
             margin: 0;
@@ -145,6 +145,46 @@
             background: #f8d7da;
             color: #721c24;
         }
+        .formula-section {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        .formula-section h3 {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .formula-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .formula-card h4 {
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .formula-card code {
+            display: block;
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .formula-card p {
+            font-size: 12px;
+            color: #6c757d;
+            margin: 0;
+        }
         .footer {
             padding: 20px;
             text-align: center;
@@ -157,29 +197,29 @@
     <div class="container">
         <div class="header">
             <h1>🎯 Polymarket 市场数据概览</h1>
-            <p>更新时间: 2025年11月25日 09:50:59</p>
+            <p>更新时间: 2025年12月29日 12:13:29</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>监控市场总数</h3>
-                <p>26</p>
+                <p>25</p>
             </div>
             <div class="stat-card">
                 <h3>启用市场数量</h3>
-                <p>18</p>
+                <p>25</p>
             </div>
             <div class="stat-card">
                 <h3>启用市场24h总交易量</h3>
-                <p>$592.6K</p>
+                <p>$485.2K</p>
             </div>
             <div class="stat-card">
                 <h3>所有市场累计交易量</h3>
-                <p>$95.71M</p>
+                <p>$98.34M</p>
             </div>
             <div class="stat-card">
                 <h3>启用市场总流动性</h3>
-                <p>$1.25M</p>
+                <p>$1.29M</p>
             </div>
         </div>
 
@@ -190,6 +230,7 @@
                         <th>状态</th>
                         <th>市场名称</th>
                         <th>方向</th>
+                        <th class="right">上限</th>
                         <th class="right">24h交易量</th>
                         <th class="right">7d交易量</th>
                         <th class="right">流动性</th>
@@ -205,274 +246,172 @@
                 <tbody>
 
                     <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>No change in Fed interest rates after December 2025 meeting?</td>
-                        <td><span class="trade-side yes">YES</span></td>
-                        <td class="right">$1.59M</td>
-                        <td class="right">$8.51M</td>
-                        <td class="right">$349.5K</td>
-                        <td class="right">17.0%</td>
-                        <td class="right">$5.9K</td>
-                        <td class="right">18.0%</td>
-                        <td class="right">$9.9K</td>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China invade Taiwan in 2025?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$30.1K</td>
+                        <td class="right">$2.08M</td>
+                        <td class="right">$89.8K</td>
+                        <td class="right">99.3%</td>
+                        <td class="right">$1.9K</td>
+                        <td class="right">99.6%</td>
+                        <td class="right">$173</td>
+                        <td class="right">0.4%</td>
+                        <td class="right">10244.1x</td>
+                        <td class="right">41.0</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>China x Philippines military clash by December 31?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$97</td>
+                        <td class="right">$1.5K</td>
+                        <td class="right">$3.7K</td>
+                        <td class="right">99.5%</td>
+                        <td class="right">$62</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$64</td>
+                        <td class="right">2.7%</td>
+                        <td class="right">16.3x</td>
+                        <td class="right">0.44</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China unban Bitcoin by 2027?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$1.2K</td>
+                        <td class="right">$6.8K</td>
+                        <td class="right">$15.0K</td>
+                        <td class="right">93.0%</td>
+                        <td class="right">$727</td>
+                        <td class="right">95.0%</td>
+                        <td class="right">$418</td>
                         <td class="right">2.0%</td>
-                        <td class="right">856.8x</td>
-                        <td class="right">17.1</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Will China blockade Taiwan by June 30?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$290</td>
-                        <td class="right">$17.3K</td>
-                        <td class="right">$5.1K</td>
-                        <td class="right">86.0%</td>
-                        <td class="right">$175</td>
-                        <td class="right">92.0%</td>
-                        <td class="right">$182</td>
-                        <td class="right">6.0%</td>
-                        <td class="right">83.6x</td>
-                        <td class="right">5.0</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>China x Japan military clash before 2027?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$6.0K</td>
-                        <td class="right">$13.5K</td>
-                        <td class="right">$9.7K</td>
-                        <td class="right">87.0%</td>
-                        <td class="right">$67</td>
-                        <td class="right">88.0%</td>
-                        <td class="right">$42</td>
-                        <td class="right">1.0%</td>
-                        <td class="right">203.1x</td>
-                        <td class="right">2.0</td>
+                        <td class="right">15.2x</td>
+                        <td class="right">0.30</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
                         <td>Will Japanese PM apologize for China comments in 2025?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$2.2K</td>
-                        <td class="right">$10.3K</td>
-                        <td class="right">$3.2K</td>
-                        <td class="right">89.0%</td>
-                        <td class="right">$64</td>
-                        <td class="right">91.0%</td>
+                        <td class="right">$30</td>
+                        <td class="right">$486</td>
+                        <td class="right">$4.9K</td>
+                        <td class="right">$3.9K</td>
+                        <td class="right">99.3%</td>
                         <td class="right">$91</td>
+                        <td class="right">99.6%</td>
+                        <td class="right">$39</td>
+                        <td class="right">0.3%</td>
+                        <td class="right">71.6x</td>
+                        <td class="right">0.21</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>China x Taiwan military clash by December 31?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$1.9K</td>
+                        <td class="right">$14.7K</td>
+                        <td class="right">$22.5K</td>
+                        <td class="right">99.0%</td>
+                        <td class="right">$33</td>
+                        <td class="right">99.3%</td>
+                        <td class="right">$186</td>
+                        <td class="right">0.3%</td>
+                        <td class="right">67.9x</td>
+                        <td class="right">0.20</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Xi Jinping out by end of 2026?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$4.5K</td>
+                        <td class="right">$137.5K</td>
+                        <td class="right">$172.9K</td>
+                        <td class="right">90.0%</td>
+                        <td class="right">$32.3K</td>
+                        <td class="right">91.0%</td>
+                        <td class="right">$7.2K</td>
+                        <td class="right">1.0%</td>
+                        <td class="right">19.0x</td>
+                        <td class="right">0.19</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will Donald Trump visit Taiwan in 2025?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$1.3K</td>
+                        <td class="right">$3.2K</td>
+                        <td class="right">$5.7K</td>
+                        <td class="right">99.7%</td>
+                        <td class="right">$409</td>
+                        <td class="right">99.9%</td>
+                        <td class="right">$11</td>
+                        <td class="right">0.2%</td>
+                        <td class="right">78.0x</td>
+                        <td class="right">0.16</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China invade Taiwan by end of 2026?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$3.9K</td>
+                        <td class="right">$87.7K</td>
+                        <td class="right">$105.7K</td>
+                        <td class="right">87.0%</td>
+                        <td class="right">$5.0K</td>
+                        <td class="right">89.0%</td>
+                        <td class="right">$13.0K</td>
                         <td class="right">2.0%</td>
-                        <td class="right">88.6x</td>
-                        <td class="right">1.8</td>
+                        <td class="right">6.8x</td>
+                        <td class="right">0.14</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
                         <td>China x Japan sever diplomatic relations in 2025?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$2.5K</td>
-                        <td class="right">$36.2K</td>
-                        <td class="right">$7.8K</td>
-                        <td class="right">96.1%</td>
-                        <td class="right">$171</td>
-                        <td class="right">96.6%</td>
-                        <td class="right">$82</td>
-                        <td class="right">0.5%</td>
-                        <td class="right">339.4x</td>
-                        <td class="right">1.7</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>China coup attempt in 2025?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$1.4K</td>
-                        <td class="right">$30.3K</td>
-                        <td class="right">$13.9K</td>
-                        <td class="right">98.7%</td>
-                        <td class="right">$78</td>
-                        <td class="right">98.9%</td>
-                        <td class="right">$46</td>
-                        <td class="right">0.3%</td>
-                        <td class="right">425.7x</td>
-                        <td class="right">1.3</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>Interstellar object confirmed aliens?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$9.6K</td>
-                        <td class="right">$45.8K</td>
-                        <td class="right">$25.8K</td>
-                        <td class="right">97.4%</td>
-                        <td class="right">$764</td>
-                        <td class="right">98.0%</td>
-                        <td class="right">$202</td>
-                        <td class="right">0.6%</td>
-                        <td class="right">202.0x</td>
-                        <td class="right">1.2</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Sam Altman in jail by December 31?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$0</td>
-                        <td class="right">$11.3K</td>
-                        <td class="right">$1.5K</td>
-                        <td class="right">98.4%</td>
-                        <td class="right">$49</td>
-                        <td class="right">99.0%</td>
-                        <td class="right">$60</td>
-                        <td class="right">0.7%</td>
-                        <td class="right">133.6x</td>
-                        <td class="right">0.94</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Will China invade Taiwan in 2025?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$58.9K</td>
-                        <td class="right">$366.9K</td>
-                        <td class="right">$139.4K</td>
-                        <td class="right">98.1%</td>
-                        <td class="right">$130</td>
-                        <td class="right">98.3%</td>
-                        <td class="right">$765</td>
-                        <td class="right">0.2%</td>
-                        <td class="right">464.7x</td>
-                        <td class="right">0.93</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Will China unban Bitcoin in 2025?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$23.5K</td>
-                        <td class="right">$101.5K</td>
-                        <td class="right">$36.0K</td>
-                        <td class="right">98.9%</td>
-                        <td class="right">$243</td>
-                        <td class="right">99.1%</td>
-                        <td class="right">$330</td>
-                        <td class="right">0.3%</td>
-                        <td class="right">286.0x</td>
-                        <td class="right">0.86</td>
+                        <td class="right">$30</td>
+                        <td class="right">$8.2K</td>
+                        <td class="right">$24.1K</td>
+                        <td class="right">$6.3K</td>
+                        <td class="right">99.6%</td>
+                        <td class="right">$103</td>
+                        <td class="right">99.7%</td>
+                        <td class="right">$197</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">106.1x</td>
+                        <td class="right">0.11</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
                         <td>China x India military clash by December 31?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$2.0K</td>
-                        <td class="right">$9.3K</td>
-                        <td class="right">$6.6K</td>
-                        <td class="right">97.4%</td>
-                        <td class="right">$50</td>
-                        <td class="right">97.8%</td>
-                        <td class="right">$95</td>
-                        <td class="right">0.6%</td>
-                        <td class="right">77.3x</td>
-                        <td class="right">0.46</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Xi Jinping out in 2025?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$448.9K</td>
-                        <td class="right">$2.45M</td>
-                        <td class="right">$683.3K</td>
-                        <td class="right">98.1%</td>
-                        <td class="right">$25.8K</td>
-                        <td class="right">98.2%</td>
-                        <td class="right">$10.7K</td>
-                        <td class="right">0.1%</td>
-                        <td class="right">227.7x</td>
-                        <td class="right">0.23</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>US x Russia military clash by June 30, 2026?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$0</td>
-                        <td class="right">$144</td>
-                        <td class="right">$5.7K</td>
-                        <td class="right">90.0%</td>
-                        <td class="right">$106</td>
-                        <td class="right">96.0%</td>
-                        <td class="right">$67</td>
-                        <td class="right">10.0%</td>
-                        <td class="right">1.6x</td>
-                        <td class="right">0.16</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Will China blockade Taiwan by December 31?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$118</td>
-                        <td class="right">$1.1K</td>
-                        <td class="right">$3.0K</td>
-                        <td class="right">97.7%</td>
-                        <td class="right">$584</td>
-                        <td class="right">98.3%</td>
-                        <td class="right">$94</td>
-                        <td class="right">1.4%</td>
-                        <td class="right">9.4x</td>
-                        <td class="right">0.13</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>China x Philippines military clash before 2027?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$123</td>
-                        <td class="right">$437</td>
-                        <td class="right">$11.6K</td>
-                        <td class="right">79.0%</td>
-                        <td class="right">$58</td>
-                        <td class="right">81.0%</td>
-                        <td class="right">$86</td>
-                        <td class="right">2.0%</td>
-                        <td class="right">3.9x</td>
-                        <td class="right">0.08</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Sam Altman in jail by June 30?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$0</td>
-                        <td class="right">$259</td>
-                        <td class="right">$3.9K</td>
-                        <td class="right">94.1%</td>
-                        <td class="right">$47</td>
-                        <td class="right">96.0%</td>
-                        <td class="right">$68</td>
-                        <td class="right">1.9%</td>
-                        <td class="right">2.8x</td>
-                        <td class="right">0.05</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>Will Donald Trump visit Taiwan in 2025?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$216</td>
-                        <td class="right">$820</td>
-                        <td class="right">$6.8K</td>
-                        <td class="right">97.8%</td>
-                        <td class="right">$29</td>
-                        <td class="right">98.9%</td>
-                        <td class="right">$164</td>
-                        <td class="right">1.2%</td>
-                        <td class="right">4.3x</td>
+                        <td class="right">$30</td>
+                        <td class="right">$137</td>
+                        <td class="right">$2.6K</td>
+                        <td class="right">$13.4K</td>
+                        <td class="right">99.6%</td>
+                        <td class="right">$40</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$70</td>
+                        <td class="right">0.2%</td>
+                        <td class="right">26.0x</td>
                         <td class="right">0.05</td>
                     </tr>
 
@@ -480,152 +419,279 @@
                         <td><span class="status enabled">已启用</span></td>
                         <td>Will Xi Jinping win the Nobel Peace Prize in 2026?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$3</td>
-                        <td class="right">$23.3K</td>
-                        <td class="right">$62.1K</td>
-                        <td class="right">98.7%</td>
-                        <td class="right">$46</td>
-                        <td class="right">99.0%</td>
-                        <td class="right">$1.7K</td>
-                        <td class="right">0.3%</td>
-                        <td class="right">13.5x</td>
-                        <td class="right">0.04</td>
+                        <td class="right">$30</td>
+                        <td class="right">$0</td>
+                        <td class="right">$293</td>
+                        <td class="right">$24.5K</td>
+                        <td class="right">97.1%</td>
+                        <td class="right">$111</td>
+                        <td class="right">99.2%</td>
+                        <td class="right">$103</td>
+                        <td class="right">2.2%</td>
+                        <td class="right">2.2x</td>
+                        <td class="right">0.05</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
-                        <td>Xi Jinping out by end of 2026?</td>
+                        <td>Interstellar object confirmed aliens?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$34.3K</td>
-                        <td class="right">$354.2K</td>
-                        <td class="right">$210.9K</td>
-                        <td class="right">88.0%</td>
-                        <td class="right">$93.3K</td>
-                        <td class="right">89.0%</td>
-                        <td class="right">$89.7K</td>
-                        <td class="right">1.0%</td>
-                        <td class="right">3.9x</td>
-                        <td class="right">0.04</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status enabled">已启用</span></td>
-                        <td>Will China unban Bitcoin by 2027?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$658</td>
-                        <td class="right">$5.0K</td>
-                        <td class="right">$13.8K</td>
-                        <td class="right">90.0%</td>
-                        <td class="right">$572</td>
-                        <td class="right">91.0%</td>
+                        <td class="right">$30</td>
+                        <td class="right">$5.6K</td>
+                        <td class="right">$35.3K</td>
+                        <td class="right">$29.7K</td>
+                        <td class="right">99.7%</td>
                         <td class="right">$1.3K</td>
-                        <td class="right">1.0%</td>
-                        <td class="right">3.8x</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$800</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">42.5x</td>
                         <td class="right">0.04</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
-                        <td>China x Taiwan military clash by December 31?</td>
+                        <td>China x Japan military clash before 2027?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$10.0K</td>
-                        <td class="right">$42.0K</td>
-                        <td class="right">$31.9K</td>
-                        <td class="right">98.0%</td>
-                        <td class="right">$355</td>
-                        <td class="right">98.2%</td>
-                        <td class="right">$3.9K</td>
-                        <td class="right">0.2%</td>
-                        <td class="right">10.8x</td>
+                        <td class="right">$30</td>
+                        <td class="right">$398</td>
+                        <td class="right">$12.1K</td>
+                        <td class="right">$25.1K</td>
+                        <td class="right">86.0%</td>
+                        <td class="right">$2.2K</td>
+                        <td class="right">88.0%</td>
+                        <td class="right">$10.1K</td>
+                        <td class="right">2.0%</td>
+                        <td class="right">1.2x</td>
                         <td class="right">0.02</td>
                     </tr>
 
                     <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>Will Jia Yueting enter mainland China by December 31?</td>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China blockade Taiwan by December 31?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$93</td>
-                        <td class="right">$184</td>
-                        <td class="right">$3.1K</td>
-                        <td class="right">98.2%</td>
+                        <td class="right">$30</td>
+                        <td class="right">$86</td>
+                        <td class="right">$219</td>
+                        <td class="right">$2.2K</td>
+                        <td class="right">99.1%</td>
+                        <td class="right">$67</td>
+                        <td class="right">99.7%</td>
                         <td class="right">$91</td>
-                        <td class="right">99.6%</td>
-                        <td class="right">$99</td>
-                        <td class="right">1.4%</td>
-                        <td class="right">1.5x</td>
+                        <td class="right">1.3%</td>
+                        <td class="right">1.8x</td>
                         <td class="right">0.02</td>
                     </tr>
 
                     <tr>
-                        <td><span class="status paused">已暂停</span></td>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>China x Philippines military clash before 2027?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$171</td>
+                        <td class="right">$1.7K</td>
+                        <td class="right">$9.5K</td>
+                        <td class="right">81.0%</td>
+                        <td class="right">$314</td>
+                        <td class="right">84.0%</td>
+                        <td class="right">$3.8K</td>
+                        <td class="right">3.0%</td>
+                        <td class="right">0.44x</td>
+                        <td class="right">0.01</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
                         <td>Will Jia Yueting enter mainland China by June 30?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$0</td>
-                        <td class="right">$419</td>
-                        <td class="right">$851</td>
-                        <td class="right">90.0%</td>
-                        <td class="right">$54</td>
-                        <td class="right">91.0%</td>
-                        <td class="right">$218</td>
-                        <td class="right">1.0%</td>
-                        <td class="right">1.7x</td>
-                        <td class="right">0.02</td>
+                        <td class="right">$30</td>
+                        <td class="right">$6</td>
+                        <td class="right">$19</td>
+                        <td class="right">$973</td>
+                        <td class="right">93.1%</td>
+                        <td class="right">$75</td>
+                        <td class="right">96.0%</td>
+                        <td class="right">$50</td>
+                        <td class="right">3.8%</td>
+                        <td class="right">0.23x</td>
+                        <td class="right">0.01</td>
                     </tr>
 
                     <tr>
                         <td><span class="status enabled">已启用</span></td>
-                        <td>China x Philippines military clash by December 31?</td>
+                        <td>Xi Jinping out in 2025?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$1.7K</td>
-                        <td class="right">$4.1K</td>
-                        <td class="right">$9.2K</td>
-                        <td class="right">97.5%</td>
-                        <td class="right">$350</td>
-                        <td class="right">97.8%</td>
-                        <td class="right">$1.6K</td>
-                        <td class="right">0.3%</td>
-                        <td class="right">2.6x</td>
+                        <td class="right">$30</td>
+                        <td class="right">$423.6K</td>
+                        <td class="right">$3.69M</td>
+                        <td class="right">$691.6K</td>
+                        <td class="right">99.7%</td>
+                        <td class="right">$10.8K</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$599.7K</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">6.2x</td>
                         <td class="right">0.01</td>
                     </tr>
 
                     <tr>
-                        <td><span class="status paused">已暂停</span></td>
-                        <td>Will China invade Taiwan by end of 2026?</td>
-                        <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$7.5K</td>
-                        <td class="right">$165.9K</td>
-                        <td class="right">$116.4K</td>
-                        <td class="right">86.0%</td>
-                        <td class="right">$13.3K</td>
-                        <td class="right">87.0%</td>
-                        <td class="right">$222.6K</td>
-                        <td class="right">1.0%</td>
-                        <td class="right">0.75x</td>
-                        <td class="right">0.01</td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="status paused">已暂停</span></td>
+                        <td><span class="status enabled">已启用</span></td>
                         <td>Will Donald Trump visit Taiwan in 2026?</td>
                         <td><span class="trade-side no">NO</span></td>
-                        <td class="right">$1</td>
-                        <td class="right">$1</td>
-                        <td class="right">$458</td>
-                        <td class="right">88.0%</td>
-                        <td class="right">$27</td>
-                        <td class="right">94.0%</td>
-                        <td class="right">$41</td>
-                        <td class="right">12.0%</td>
-                        <td class="right">0.02x</td>
+                        <td class="right">$30</td>
+                        <td class="right">$0</td>
+                        <td class="right">$14</td>
+                        <td class="right">$597</td>
+                        <td class="right">91.0%</td>
+                        <td class="right">$105</td>
+                        <td class="right">96.0%</td>
+                        <td class="right">$213</td>
+                        <td class="right">7.0%</td>
+                        <td class="right">0.06x</td>
                         <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>China coup attempt in 2025?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$289</td>
+                        <td class="right">$2.7K</td>
+                        <td class="right">$10.2K</td>
+                        <td class="right">99.5%</td>
+                        <td class="right">$97</td>
+                        <td class="right">99.9%</td>
+                        <td class="right">$3.9K</td>
+                        <td class="right">0.4%</td>
+                        <td class="right">0.69x</td>
+                        <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China blockade Taiwan by June 30?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$0</td>
+                        <td class="right">$356</td>
+                        <td class="right">$6.9K</td>
+                        <td class="right">83.0%</td>
+                        <td class="right">$118</td>
+                        <td class="right">87.0%</td>
+                        <td class="right">$10.9K</td>
+                        <td class="right">8.0%</td>
+                        <td class="right">0.03x</td>
+                        <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>US x Russia military clash by June 30, 2026?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$0</td>
+                        <td class="right">$6</td>
+                        <td class="right">$7.5K</td>
+                        <td class="right">92.2%</td>
+                        <td class="right">$92</td>
+                        <td class="right">98.5%</td>
+                        <td class="right">$129</td>
+                        <td class="right">6.4%</td>
+                        <td class="right">0.04x</td>
+                        <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Sam Altman in jail by December 31?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$135</td>
+                        <td class="right">$1.7K</td>
+                        <td class="right">$1.2K</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$74</td>
+                        <td class="right">99.9%</td>
+                        <td class="right">$6.0K</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">0.28x</td>
+                        <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will Jia Yueting enter mainland China by December 31?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$5</td>
+                        <td class="right">$437</td>
+                        <td class="right">$2.0K</td>
+                        <td class="right">99.7%</td>
+                        <td class="right">$118</td>
+                        <td class="right">99.8%</td>
+                        <td class="right">$5.2K</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">0.08x</td>
+                        <td class="right">0.00</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Will China unban Bitcoin in 2025?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$3.1K</td>
+                        <td class="right">$38.1K</td>
+                        <td class="right">$33.8K</td>
+                        <td class="right">99.9%</td>
+                        <td class="right">$690</td>
+                        <td class="right">100.0%</td>
+                        <td class="right">$0</td>
+                        <td class="right">0.1%</td>
+                        <td class="right">-</td>
+                        <td class="right">-</td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="status enabled">已启用</span></td>
+                        <td>Sam Altman in jail by June 30?</td>
+                        <td><span class="trade-side no">NO</span></td>
+                        <td class="right">$30</td>
+                        <td class="right">$0</td>
+                        <td class="right">$0</td>
+                        <td class="right">$4.1K</td>
+                        <td class="right">96.5%</td>
+                        <td class="right">$115</td>
+                        <td class="right">97.5%</td>
+                        <td class="right">$86</td>
+                        <td class="right">1.0%</td>
+                        <td class="right">-</td>
+                        <td class="right">-</td>
                     </tr>
 
                 </tbody>
             </table>
         </div>
 
+        <div class="formula-section">
+            <h3>指标计算说明</h3>
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <h4>周转率</h4>
+                    <code>周转率 = 7日交易量 / (卖价金额 + 仓位上限)</code>
+                    <p>衡量市场活跃度，数值越高表示交易越频繁</p>
+                </div>
+                <div class="formula-card">
+                    <h4>收益率</h4>
+                    <code>收益率 = 价差 × 周转率</code>
+                    <p>综合考虑价差和交易频率的预期收益指标</p>
+                </div>
+            </div>
+        </div>
+
         <div class="footer">
-            <p>数据来源: Polymarket API | 自动生成于 2025-11-25 09:50:59</p>
+            <p>数据来源: Polymarket API | 自动生成于 2025-12-29 12:13:29</p>
         </div>
     </div>
 </body>
