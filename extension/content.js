@@ -5,20 +5,29 @@ let currentPanel = null;
 
 // 初始化
 async function init() {
-  // 先用缓存的配置快速显示
+  // 从 storage 读取配置并显示
   const result = await chrome.storage.local.get(['marketsConfig']);
   if (result.marketsConfig) {
     marketsConfig = result.marketsConfig;
     checkAndShowPanel();
   }
 
-  // 然后请求 background 从 GitHub 刷新最新配置
-  chrome.runtime.sendMessage({ type: 'REFRESH_CONFIG' }, (response) => {
-    if (response && response.config) {
-      marketsConfig = response.config;
-      checkAndShowPanel();
-    }
-  });
+  // 尝试后台刷新（不阻塞显示）
+  try {
+    chrome.runtime.sendMessage({ type: 'REFRESH_CONFIG' }, (response) => {
+      // 忽略错误（Service Worker 可能休眠）
+      if (chrome.runtime.lastError) {
+        console.log('Auto-Poly: Background unavailable, using cache');
+        return;
+      }
+      if (response && response.config) {
+        marketsConfig = response.config;
+        checkAndShowPanel();
+      }
+    });
+  } catch (e) {
+    console.log('Auto-Poly: Using cached config');
+  }
 }
 
 // 监听配置更新消息
@@ -150,7 +159,7 @@ function createPanel(market) {
     panel.classList.add('auto-poly-hidden');
   });
 
-  // 点击面板刷新
+  // 点击面板刷新（直接从 storage 读取）
   panel.querySelector('.auto-poly-footer').addEventListener('click', async () => {
     const result = await chrome.storage.local.get(['marketsConfig']);
     if (result.marketsConfig) {
