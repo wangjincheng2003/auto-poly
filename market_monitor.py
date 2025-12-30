@@ -14,6 +14,7 @@ import json
 import os
 import requests
 import signal
+import subprocess
 import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
@@ -504,6 +505,47 @@ def save_to_html(markets_stats: List[Dict], history: Dict = None):
         f.write(html)
 
 
+def sync_to_github():
+    """将 HTML 文件同步到 GitHub"""
+    try:
+        result = subprocess.run(
+            ['git', 'diff', '--quiet', 'polymarket_markets.html'],
+            cwd=SCRIPT_DIR,
+            capture_output=True
+        )
+        if result.returncode == 0:
+            return False
+
+        subprocess.run(
+            ['git', 'add', 'polymarket_markets.html'],
+            cwd=SCRIPT_DIR,
+            check=True,
+            capture_output=True
+        )
+
+        commit_msg = f"Update market data {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        subprocess.run(
+            ['git', 'commit', '-m', commit_msg],
+            cwd=SCRIPT_DIR,
+            check=True,
+            capture_output=True
+        )
+
+        subprocess.run(
+            ['git', 'push'],
+            cwd=SCRIPT_DIR,
+            check=True,
+            capture_output=True
+        )
+        return True
+    except subprocess.CalledProcessError as e:
+        console.print(f"[yellow]⚠ Git同步失败: {e}[/yellow]")
+        return False
+    except Exception as e:
+        console.print(f"[yellow]⚠ Git同步异常: {e}[/yellow]")
+        return False
+
+
 # ============= 主循环 =============
 
 def run_cycle(client: Optional[ClobClient] = None):
@@ -561,6 +603,10 @@ def run_cycle(client: Optional[ClobClient] = None):
     # 生成HTML
     save_to_html(markets_stats, history)
     console.print(f"[green]✓ HTML已更新: {HTML_FILE}[/green]")
+
+    # 同步到GitHub
+    if sync_to_github():
+        console.print("[green]✓ 已同步到GitHub[/green]")
 
 
 def main():
