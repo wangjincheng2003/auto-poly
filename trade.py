@@ -360,8 +360,8 @@ while True:
                 pass
             session = create_session()
 
-        # 连续失败50次发送告警
-        if consecutive_errors == 50:
+        # 连续失败5次发送告警
+        if consecutive_errors == 5:
             send_wechat(
                 "⚠️ 连续失败告警",
                 f"**告警时间**: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n**连续失败**: {consecutive_errors}轮\n\n**最近错误**: {type(e).__name__}: {str(e)[:200]}"
