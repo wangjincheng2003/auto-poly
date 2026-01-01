@@ -194,90 +194,93 @@ def process_market(client, market_config):
     token_id = market_config['yes_token_id'] if trade_side == 'yes' else market_config['no_token_id']
     max_position = market_config['max_position_value']
 
-    # 获取订单和订单簿
-    active_orders = client.get_orders(OpenOrderParams(market=market_id))
-    buy_orders = [o for o in active_orders if o['side'] == 'BUY']
-    sell_orders = [o for o in active_orders if o['side'] == 'SELL']
-    orderbook = client.get_order_book(token_id)
-    tick_size = float(client.get_tick_size(token_id))
+    try:
+        # 获取订单和订单簿
+        active_orders = client.get_orders(OpenOrderParams(market=market_id))
+        buy_orders = [o for o in active_orders if o['side'] == 'BUY']
+        sell_orders = [o for o in active_orders if o['side'] == 'SELL']
+        orderbook = client.get_order_book(token_id)
+        tick_size = float(client.get_tick_size(token_id))
 
-    # 计算除自己以外的真实市场价格与档位
-    my_buy_sizes = get_my_sizes_by_price(buy_orders, tick_size)
-    my_sell_sizes = get_my_sizes_by_price(sell_orders, tick_size)
-    bid_levels = aggregate_other_liquidity(orderbook.bids, my_buy_sizes, tick_size, descending=True)
-    ask_levels = aggregate_other_liquidity(orderbook.asks, my_sell_sizes, tick_size, descending=False)
-    best_bid = bid_levels[0][0] if bid_levels else 0.0
-    best_ask = ask_levels[0][0] if ask_levels else 1.0
+        # 计算除自己以外的真实市场价格与档位
+        my_buy_sizes = get_my_sizes_by_price(buy_orders, tick_size)
+        my_sell_sizes = get_my_sizes_by_price(sell_orders, tick_size)
+        bid_levels = aggregate_other_liquidity(orderbook.bids, my_buy_sizes, tick_size, descending=True)
+        ask_levels = aggregate_other_liquidity(orderbook.asks, my_sell_sizes, tick_size, descending=False)
+        best_bid = bid_levels[0][0] if bid_levels else 0.0
+        best_ask = ask_levels[0][0] if ask_levels else 1.0
 
-    # 获取持仓
-    response = session.get("https://data-api.polymarket.com/positions",
-                           params={'user': PROXY_ADDRESS, 'market': market_id},
-                           timeout=10)
-    positions = response.json()
+        # 获取持仓
+        response = session.get("https://data-api.polymarket.com/positions",
+                               params={'user': PROXY_ADDRESS, 'market': market_id},
+                               timeout=10)
+        positions = response.json()
 
-    if positions:
-        current_size = float(positions[0]['size'])
-        avg_buy_price = float(positions[0]['avgPrice'])
-        current_position = float(positions[0]['currentValue'])
-    else:
-        current_position = current_size = avg_buy_price = 0.0
-
-    # 获取余额
-    balance_info = client.get_balance_allowance(BalanceAllowanceParams(asset_type=AssetType.COLLATERAL))  # type: ignore
-    usdc_balance = float(balance_info['balance']) / 1e6
-    cost_basis = current_size * avg_buy_price  # 使用初始下注金额而非当前市值
-    available_position = max(0, min(max_position - cost_basis, usdc_balance))
-    # 计算下单价格（按其他人订单累计金额确定档位）
-    if bid_levels and ask_levels:
-        buy_price = find_price_by_value(bid_levels, available_position, is_bid=True)
-        # 只有价差足够才挂买单
-        target_buy_value = available_position if (best_ask - buy_price) >= MIN_PROFIT else 0
-    else:
-        buy_price = best_bid
-        target_buy_value = 0
-
-    if current_size > 0:
-        target_profit_price = normalize_price(min(avg_buy_price + MIN_PROFIT, 0.999), tick_size)
-        if ask_levels:
-            sell_price = max(find_price_by_value(ask_levels, current_size * best_ask, is_bid=False),
-                             target_profit_price)
+        if positions:
+            current_size = float(positions[0]['size'])
+            avg_buy_price = float(positions[0]['avgPrice'])
+            current_position = float(positions[0]['currentValue'])
         else:
-            sell_price = target_profit_price
-        sell_price = min(sell_price, 0.999)
-        target_sell_value = current_size * sell_price
-    else:
-        sell_price = best_ask
-        target_sell_value = 0
+            current_position = current_size = avg_buy_price = 0.0
 
-    buy_count = manage_orders_smart(client, buy_orders, buy_price, target_buy_value, BUY, token_id, tick_size)
-    sell_count = manage_orders_smart(client, sell_orders, sell_price, target_sell_value, SELL, token_id, tick_size)
+        # 获取余额
+        balance_info = client.get_balance_allowance(BalanceAllowanceParams(asset_type=AssetType.COLLATERAL))  # type: ignore
+        usdc_balance = float(balance_info['balance']) / 1e6
+        cost_basis = current_size * avg_buy_price  # 使用初始下注金额而非当前市值
+        available_position = max(0, min(max_position - cost_basis, usdc_balance))
+        # 计算下单价格（按其他人订单累计金额确定档位）
+        if bid_levels and ask_levels:
+            buy_price = find_price_by_value(bid_levels, available_position, is_bid=True)
+            # 只有价差足够才挂买单
+            target_buy_value = available_position if (best_ask - buy_price) >= MIN_PROFIT else 0
+        else:
+            buy_price = best_bid
+            target_buy_value = 0
 
-    # 检测持仓数量变化并推送微信通知
-    if market_id in last_sizes:  # 不是首次运行
-        last_size = last_sizes[market_id]
-        change = current_size - last_size
-        if abs(change) > 0.01:  # 变化超过0.01才推送
-            portfolio = get_portfolio_summary(client)
-            send_wechat(
-                f"{'🟢 买入成交' if change > 0 else '🔴 卖出成交'} - {market_name}",
-                f"**市场**: {market_name}\n\n**数量变化**: {change:+.2f}\n\n**当前持仓**: {current_size:.2f} (${current_position:.2f})\n\n**完整Portfolio**:\n{portfolio}"
-            )
-    last_sizes[market_id] = current_size
+        if current_size > 0:
+            target_profit_price = normalize_price(min(avg_buy_price + MIN_PROFIT, 0.999), tick_size)
+            if ask_levels:
+                sell_price = max(find_price_by_value(ask_levels, current_size * best_ask, is_bid=False),
+                                 target_profit_price)
+            else:
+                sell_price = target_profit_price
+            sell_price = min(sell_price, 0.999)
+            target_sell_value = current_size * sell_price
+        else:
+            sell_price = best_ask
+            target_sell_value = 0
 
-    return {
-        'name': market_name,
-        'side': trade_side,
-        'best_bid': best_bid,
-        'best_ask': best_ask,
-        'buy_price': buy_price,
-        'sell_price': sell_price,
-        'tick_size': tick_size,
-        'position_value': current_position,
-        'max_position_value': max_position,
-        'position_ratio': current_position / max_position if max_position > 0 else 0,
-        'buy_orders_count': buy_count,
-        'sell_orders_count': sell_count,
-    }
+        buy_count = manage_orders_smart(client, buy_orders, buy_price, target_buy_value, BUY, token_id, tick_size)
+        sell_count = manage_orders_smart(client, sell_orders, sell_price, target_sell_value, SELL, token_id, tick_size)
+
+        # 检测持仓数量变化并推送微信通知
+        if market_id in last_sizes:  # 不是首次运行
+            last_size = last_sizes[market_id]
+            change = current_size - last_size
+            if abs(change) > 0.01:  # 变化超过0.01才推送
+                portfolio = get_portfolio_summary(client)
+                send_wechat(
+                    f"{'🟢 买入成交' if change > 0 else '🔴 卖出成交'} - {market_name}",
+                    f"**市场**: {market_name}\n\n**数量变化**: {change:+.2f}\n\n**当前持仓**: {current_size:.2f} (${current_position:.2f})\n\n**完整Portfolio**:\n{portfolio}"
+                )
+        last_sizes[market_id] = current_size
+
+        return {
+            'name': market_name,
+            'side': trade_side,
+            'best_bid': best_bid,
+            'best_ask': best_ask,
+            'buy_price': buy_price,
+            'sell_price': sell_price,
+            'tick_size': tick_size,
+            'position_value': current_position,
+            'max_position_value': max_position,
+            'position_ratio': current_position / max_position if max_position > 0 else 0,
+            'buy_orders_count': buy_count,
+            'sell_orders_count': sell_count,
+        }
+    except Exception as e:
+        raise Exception(f"[{market_name}] {type(e).__name__}: {e}") from e
 
 # ============= 主程序 =============
 

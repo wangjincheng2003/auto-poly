@@ -11,24 +11,6 @@
     },
     {
       "enabled": true,
-      "name": "Interstellar object confirmed aliens?",
-      "market_id": "0xc1c4e7857dfd1fe47c1e6a11813aaca3f622a5f47769cd765be8c7a8336af555",
-      "yes_token_id": "61760528616479661808037564191552690192373467478798081794724062354745005823748",
-      "no_token_id": "23548181446245041653069828042185650684563743512359959909405337958307023325206",
-      "trade_side": "no",
-      "max_position_value": 40
-    },
-    {
-      "enabled": true,
-      "name": "Xi Jinping out by end of 2026?",
-      "market_id": "0xa467b14d51f01b957109d9cbb1d6c124fab2a089d52ed8f471d23c2812e743b7",
-      "yes_token_id": "32338220190071351435772801779725302244575775216413325951443816017994629993401",
-      "no_token_id": "25659310674993675562345759665114759892400026242514633218387667107987341231962",
-      "trade_side": "no",
-      "max_position_value": 40
-    },
-    {
-      "enabled": true,
       "name": "US x Russia military clash by June 30, 2026?",
       "market_id": "0xb1311aeea3677808af7f317895208bf9d3f685ab3f946f67afca11d5ed199dd0",
       "yes_token_id": "53718143507722222025482708105484979770434331532873527434664602715154372949986",
