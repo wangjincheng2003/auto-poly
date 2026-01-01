@@ -110,15 +110,6 @@
     },
     {
       "enabled": true,
-      "name": "Will Japanese PM apologize for China comments in 2025?",
-      "market_id": "0x6b8984b1de69cf1eb54707de4cfd0455b3eed053c3db1e565b2f906d4fbf8247",
-      "yes_token_id": "58969364816213855615291775146907533569112761571567201275002876280034021179495",
-      "no_token_id": "30586971015636507214024352073371097519751428182635257097379504215817839411485",
-      "trade_side": "no",
-      "max_position_value": 40
-    },
-    {
-      "enabled": true,
       "name": "Will Jia Yueting enter mainland China by December 31?",
       "market_id": "0x56e5fcf04deb45f9d405eb9f5202fd3247e192c5ece93b8571de78cb44617a8e",
       "yes_token_id": "69491057239561654524877574699536645015337570300926457702979750917310294441319",
