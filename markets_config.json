@@ -71,6 +71,60 @@
       "no_token_id": "33240778364804433931337333883940440366960751567328503792202773721088969618939",
       "trade_side": "no",
       "max_position_value": 40.0
+    },
+    {
+      "enabled": true,
+      "name": "Will China blockade Taiwan by June 30?",
+      "market_id": "0xb215decbedd846168842f6e207f09bd5f50ce51d2191f238887d976ec21b6f66",
+      "yes_token_id": "52035147432985774092509040925165515760899062720939921734142361138587845236034",
+      "no_token_id": "47095491075893964893538760255117389376159789121042722751357548754013031094277",
+      "trade_side": "no",
+      "max_position_value": 40.0
+    },
+    {
+      "enabled": true,
+      "name": "Will China invade Taiwan by June 30, 2026?",
+      "market_id": "0xa0b56d7e621c7cbcfa47fe1a9c24f3409e189180fd6bda55b7a8113129839afc",
+      "yes_token_id": "19417265162808201523789648874586390360859187511220432732521613022479578431850",
+      "no_token_id": "52131203329998207510016525064140580388668921672474814275063839342530145683684",
+      "trade_side": "no",
+      "max_position_value": 40.0
+    },
+    {
+      "enabled": true,
+      "name": "Xi Jinping out by end of 2026?",
+      "market_id": "0xa467b14d51f01b957109d9cbb1d6c124fab2a089d52ed8f471d23c2812e743b7",
+      "yes_token_id": "32338220190071351435772801779725302244575775216413325951443816017994629993401",
+      "no_token_id": "25659310674993675562345759665114759892400026242514633218387667107987341231962",
+      "trade_side": "no",
+      "max_position_value": 40
+    },
+    {
+      "enabled": true,
+      "name": "Sam Altman in jail by June 30?",
+      "market_id": "0x5462f8d31cc41314da1b56ff424068657315c66c0404b8cb5dff466939ca6625",
+      "yes_token_id": "51236945722865266370106564747596093732197995012408200951510863377812916453902",
+      "no_token_id": "17718121883117127484041858994698258715282000837318841943238567814505154646336",
+      "trade_side": "no",
+      "max_position_value": 40
+    },
+    {
+      "enabled": true,
+      "name": "Will Japanese PM apologize for China comments in 2025?",
+      "market_id": "0x6b8984b1de69cf1eb54707de4cfd0455b3eed053c3db1e565b2f906d4fbf8247",
+      "yes_token_id": "58969364816213855615291775146907533569112761571567201275002876280034021179495",
+      "no_token_id": "30586971015636507214024352073371097519751428182635257097379504215817839411485",
+      "trade_side": "no",
+      "max_position_value": 40
+    },
+    {
+      "enabled": true,
+      "name": "Will Jia Yueting enter mainland China by December 31?",
+      "market_id": "0x56e5fcf04deb45f9d405eb9f5202fd3247e192c5ece93b8571de78cb44617a8e",
+      "yes_token_id": "69491057239561654524877574699536645015337570300926457702979750917310294441319",
+      "no_token_id": "89377763118906076078202585982427841880100587698240674357709444796150017544559",
+      "trade_side": "no",
+      "max_position_value": 40
     }
   ]
 }
