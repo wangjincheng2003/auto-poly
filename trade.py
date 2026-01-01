@@ -139,7 +139,8 @@ def manage_orders_smart(client, orders, target_price, target_value, side, token_
     for order in orders:
         if normalize_price(float(order['price']), tick_size) != target_price:
             client.cancel(order['id'])
-            print(f"{Colors.RED}[{market_name}] 取消{'买单' if side == BUY else '卖单'}: 价格错误 {float(order['price']):.3f}{Colors.RESET}")
+            print(f"{Colors.RED}[{market_name}]{Colors.RESET}")
+            print(f"{Colors.RED}  取消{'买单' if side == BUY else '卖单'}: 价格错误 {float(order['price']):.3f}{Colors.RESET}")
 
     # 获取价格正确的订单（按创建时间倒序）
     correct_orders = [o for o in orders if normalize_price(float(o['price']), tick_size) == target_price]
@@ -158,7 +159,8 @@ def manage_orders_smart(client, orders, target_price, target_value, side, token_
             client.cancel(order['id'])
             current_value -= order_value
             cancelled += 1
-            print(f"{Colors.RED}[{market_name}] 取消{'买单' if side == BUY else '卖单'}: 金额多余 ${order_value:.2f}{Colors.RESET}")
+            print(f"{Colors.RED}[{market_name}]{Colors.RESET}")
+            print(f"{Colors.RED}  取消{'买单' if side == BUY else '卖单'}: 金额多余 ${order_value:.2f}{Colors.RESET}")
 
     # 补充差额订单
     added = 0
@@ -173,7 +175,8 @@ def manage_orders_smart(client, orders, target_price, target_value, side, token_
                 client.create_and_post_order(OrderArgs(
                     price=target_price, size=size, side=side, token_id=token_id))
                 added += 1
-                print(f"{Colors.GREEN}[{market_name}] 创建买单: 价格={target_price:.3f}, 数量={size:.2f}, 金额=${order_value:.2f}{Colors.RESET}")
+                print(f"{Colors.GREEN}[{market_name}]{Colors.RESET}")
+                print(f"{Colors.GREEN}  创建买单: 价格={target_price:.3f}, 数量={size:.2f}, 金额=${order_value:.2f}{Colors.RESET}")
                 shortage -= order_value
         else:
             # 卖单：一个订单
@@ -181,7 +184,8 @@ def manage_orders_smart(client, orders, target_price, target_value, side, token_
             client.create_and_post_order(OrderArgs(
                 price=target_price, size=size, side=side, token_id=token_id))
             added = 1
-            print(f"{Colors.GREEN}[{market_name}] 创建卖单: 价格={target_price:.3f}, 数量={size:.2f}, 金额=${shortage:.2f}{Colors.RESET}")
+            print(f"{Colors.GREEN}[{market_name}]{Colors.RESET}")
+            print(f"{Colors.GREEN}  创建卖单: 价格={target_price:.3f}, 数量={size:.2f}, 金额=${shortage:.2f}{Colors.RESET}")
 
     return len(correct_orders) - cancelled + added
 

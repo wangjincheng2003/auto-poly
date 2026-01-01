@@ -107,15 +107,6 @@
       "no_token_id": "17718121883117127484041858994698258715282000837318841943238567814505154646336",
       "trade_side": "no",
       "max_position_value": 40
-    },
-    {
-      "enabled": true,
-      "name": "Will Jia Yueting enter mainland China by December 31?",
-      "market_id": "0x56e5fcf04deb45f9d405eb9f5202fd3247e192c5ece93b8571de78cb44617a8e",
-      "yes_token_id": "69491057239561654524877574699536645015337570300926457702979750917310294441319",
-      "no_token_id": "89377763118906076078202585982427841880100587698240674357709444796150017544559",
-      "trade_side": "no",
-      "max_position_value": 40
     }
   ]
 }
