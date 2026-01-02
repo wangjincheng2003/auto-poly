@@ -99,7 +99,7 @@ def check_market_exists(config, market_id):
             return True
     return False
 
-def add_market(slug, max_position=25.0):
+def add_market(slug, max_position=40.0):
     """
     添加市场到配置文件
 
