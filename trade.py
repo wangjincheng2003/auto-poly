@@ -51,7 +51,7 @@ MIN_ORDER_VALUE = 5.0
 SCAN_INTERVAL = 10
 
 # 持仓追踪（用于检测成交）
-last_sizes = {}  # {market_id: size}
+last_states = {}  # {market_id: {'size': size, 'balance': balance}}
 
 # ============= 工具函数 =============
 
@@ -258,16 +258,19 @@ def process_market(client, market_config):
         sell_count = manage_orders_smart(client, sell_orders, sell_price, target_sell_value, SELL, token_id, tick_size, market_name)
 
         # 检测持仓数量变化并推送微信通知
-        if market_id in last_sizes:  # 不是首次运行
-            last_size = last_sizes[market_id]
-            change = current_size - last_size
-            if abs(change) > 0.01:  # 变化超过0.01才推送
+        if market_id in last_states:  # 不是首次运行
+            last_state = last_states[market_id]
+            size_change = current_size - last_state['size']
+            balance_change = usdc_balance - last_state['balance']
+            if abs(size_change) > 0.01:  # 变化超过0.01才推送
+                # 买入: balance减少(负), 卖出: balance增加(正)
+                change_value = abs(balance_change)
                 portfolio = get_portfolio_summary(client)
                 send_wechat(
-                    f"{'🟢 买入成交' if change > 0 else '🔴 卖出成交'} - {market_name}",
-                    f"**市场**: {market_name}\n\n**数量变化**: {change:+.2f}\n\n**当前持仓**: {current_size:.2f} (${current_position:.2f})\n\n**完整Portfolio**:\n{portfolio}"
+                    f"{'🟢 买入成交' if size_change > 0 else '🔴 卖出成交'} - {market_name}",
+                    f"**市场**: {market_name}\n\n**数量变化**: {size_change:+.2f} (${change_value:.2f})\n\n**当前持仓**: {current_size:.2f} (${current_position:.2f})\n\n**完整Portfolio**:\n{portfolio}"
                 )
-        last_sizes[market_id] = current_size
+        last_states[market_id] = {'size': current_size, 'balance': usdc_balance}
 
         return {
             'name': market_name,
@@ -367,11 +370,11 @@ while True:
                 pass
             session = create_session()
 
-        # 连续失败50次发送告警
-        if consecutive_errors == 50:
+        # 连续失败10/100/1000次发送告警
+        if consecutive_errors in [10, 100, 1000]:
             send_wechat(
-                "⚠️ 连续失败告警",
-                f"**告警时间**: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n**连续失败**: {consecutive_errors}轮\n\n**最近错误**: {type(e).__name__}: {str(e)[:200]}"
+                f"⚠️ 连续失败{consecutive_errors}次告警",
+                f"**告警时间**: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n**连续失败次数**: {consecutive_errors}次\n\n**最近错误**: {type(e).__name__}: {str(e)[:200]}"
             )
 
         print(f"{Colors.YELLOW}⏳ 等待 {SCAN_INTERVAL} 秒后继续下一轮...{Colors.RESET}\n")
